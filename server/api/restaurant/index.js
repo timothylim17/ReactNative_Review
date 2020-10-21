@@ -2,7 +2,7 @@ const app = require("../../util/configureApi");
 const connectDB = require("../../util/db");
 const Restaurant = require("../../models/Restaurant");
 
-app.get("*", (req, res) => {
+app.get("*", require("../../middleware/auth"), (req, res) => {
   connectDB()
     .then(() => {
       const { _id } = req.query;
@@ -12,14 +12,14 @@ app.get("*", (req, res) => {
 
       return Restaurant.find();
     })
-    .then(result => {
+    .then((result) => {
       res.status(200).json({
-        result
+        result,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(err.statusCode || 500).json({
-        error: err.message
+        error: err.message,
       });
     });
 });

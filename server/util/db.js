@@ -5,7 +5,7 @@ let isConnected;
 
 // Note: This should be stored in environment variables
 const DB_URL =
-  "mongodb+srv://admin:HBLDemo@cluster0-5eefd.mongodb.net/test?retryWrites=true&w=majority";
+  "mongodb+srv://timothylim17:DSd7YWUp920HWxVa@cluster0.k7kim.mongodb.net/reviewDB";
 
 const connectToDatabase = () => {
   if (isConnected) {
@@ -16,7 +16,7 @@ const connectToDatabase = () => {
   console.log("=> using new database connection");
   return mongoose
     .connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(db => {
+    .then((db) => {
       isConnected = db.connections[0].readyState;
     });
 };

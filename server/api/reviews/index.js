@@ -3,7 +3,7 @@ const connectDB = require("../../util/db");
 const Review = require("../../models/Review");
 const Restaurant = require("../../models/Restaurant");
 
-app.get("*", (req, res) => {
+app.get("*", require("../../middleware/auth"), (req, res) => {
   connectDB()
     .then(() => {
       const { restaurantId } = req.query;
@@ -13,22 +13,22 @@ app.get("*", (req, res) => {
 
       return Review.find({ restaurantId }).sort({ createdAt: -1 });
     })
-    .then(result => {
+    .then((result) => {
       res.status(200).json({
-        result
+        result,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(err.statusCode || 500).json({
-        error: err.message
+        error: err.message,
       });
     });
 });
 
-app.post("*", (req, res) => {
+app.post("*", require("../../middleware/auth"), (req, res) => {
   connectDB()
     .then(() => Restaurant.findOne({ _id: req.body.restaurantId }))
-    .then(restaurant => {
+    .then((restaurant) => {
       if (!restaurant) {
         throw new Error("No restaurant found with that id.");
       }
@@ -36,14 +36,14 @@ app.post("*", (req, res) => {
       const { restaurantId, content } = req.body;
       return Review.create({ restaurantId, content });
     })
-    .then(result => {
+    .then((result) => {
       res.status(200).json({
-        result
+        result,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(err.statusCode || 500).json({
-        error: err.message
+        error: err.message,
       });
     });
 });

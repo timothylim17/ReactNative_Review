@@ -1,18 +1,30 @@
 {
-  "scripts": {
-    "seed": "node seed/seed.js"
+  "name": "svelte-app",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-node-resolve": "^8.1.0",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^2.18.0",
+    "rollup-plugin-livereload": "^1.0.0",
+    "rollup-plugin-svelte": "^5.0.3",
+    "rollup-plugin-terser": "^6.1.0",
+    "svelte": "^3.0.0"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
-    "express": "^4.16.4",
-    "helmet": "^3.23.3",
+    "express": "^4.17.1",
+    "helmet": "^4.1.1",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.27.0",
-    "mongoose": "^5.9.24"
+    "mongoose": "^5.10.9",
+    "sirv-cli": "^1.0.1"
   },
-  "devDependencies": {
-    "eslint": "^7.4.0",
-    "eslint-config-handlebarlabs": "^0.0.6"
+  "scripts": {
+    "seed": "node ./seed/seed.js",
+    "build": "rollup -c",
+    "autobuild": "rollup -c -w",
+    "dev": "run-p start:dev autobuild",
+    "start": "sirv public --single",
+    "start:dev": "sirv public --single --dev"
   }
 }
