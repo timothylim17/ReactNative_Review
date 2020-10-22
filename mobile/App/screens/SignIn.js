@@ -1,9 +1,24 @@
 import React from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import { TextField, ErrorText } from "../components/Form";
 import { Button } from "../components/Button";
 import { reviewApi, saveAuthToken } from "../util/api";
+
+const styles = StyleSheet.create({
+  textBlock: {
+    marginTop: 20
+  },
+  text: {
+    fontSize: 18,
+    color: "#969696",
+    textAlign: "center",
+    marginBottom: 2
+  },
+  link: {
+    textDecorationLine: "underline"
+  }
+});
 
 export default class SignIn extends React.Component {
   state = {
@@ -53,6 +68,12 @@ export default class SignIn extends React.Component {
         />
         <ErrorText text={this.state.error} />
         <Button text="Submit" onPress={this.handleSubmit} />
+        <View style={styles.textBlock}>
+          <Text style={styles.text}>Don't have an account?</Text>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate("CreateAccount")}>
+            <Text style={[styles.text, styles.link]}>Create Account.</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     );
   }
