@@ -32,6 +32,8 @@ export default class CreateAccount extends React.Component {
     password: "",
     confirmPassword: "",
     error: "",
+    fName: "",
+    lName: "",
   };
 
   handleSubmit = () => {
@@ -45,16 +47,18 @@ export default class CreateAccount extends React.Component {
       reviewApi("/create-account", {
         method: "POST",
         body: JSON.stringify({
+          firstName: this.state.fName,
+          lastName: this.state.lName,
           email: this.state.email,
           password: this.state.password,
         }),
       })
         .then((response) => {
-          console.log("response:", response);
+
           return saveAuthToken(response.result.token);
         })
         .then(() => {
-          this.props.navigation.navigate("Information");
+          this.props.navigation.navigate("SignIn");
         })
         .catch((error) => {
           this.setState({ error: error.message });
@@ -71,6 +75,20 @@ export default class CreateAccount extends React.Component {
           placeholder="john.doe@example.com"
           onChangeText={(email) => this.setState({ email })}
           value={this.state.email}
+          autoCapitalize="none"
+        />
+        <TextField 
+          label="First Name" 
+          placeholder="John" 
+          onChangeText={(fName) => this.setState({ fName })}
+          value={this.state.fName}
+          autoCapitalize="none"
+        />
+        <TextField 
+          label="Last Name" 
+          placeholder="Doe" 
+          onChangeText={(lName) => this.setState({ lName })}
+          value={this.state.lName}
           autoCapitalize="none"
         />
         <TextField 

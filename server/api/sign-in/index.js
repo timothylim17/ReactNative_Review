@@ -19,8 +19,8 @@ app.post("*", (req, res) => {
       finalUser = user;
       return user.comparePassword(req.body.password);
     })
-    .then((isPasswordCorect) => {
-      if (!isPasswordCorect) {
+    .then((isPasswordCorrect) => {
+      if (!isPasswordCorrect) {
         throw new Error("Invalid Password");
       }
 

@@ -37,7 +37,7 @@ export default class SignIn extends React.Component {
       }),
     })
       .then((response) => {
-        console.log("response:", response);
+        // console.log("response (sign-in):", response);
         return saveAuthToken(response.result.token);
       })
       .then(() => {
