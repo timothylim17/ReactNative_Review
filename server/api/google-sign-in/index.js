@@ -12,10 +12,6 @@ app.post("*", (req, res) => {
       console.log('Google account created:', req.body);
       return Google.create(req.body);
     })
-    .then(() => {
-      // find the email on the db
-      return Google.findOne({ email: req.body.user.email });
-    })
     .then(user => {
       console.log('Test 2nd then:', user);
       finalUser = user;
@@ -27,15 +23,14 @@ app.post("*", (req, res) => {
       });
     })
     .then(token => {
-      console.log('Accepted response:', finalUser, 'TOKEN', token);
-      // res.status(200).json({
-      //   result: {
-      //     firstName: '',
-      //     lastName: '',
-      //     email: '',
-      //     token,
-      //   },
-      // })
+      res.status(200).json({
+        result: {
+          firstName: finalUser.firstName,
+          lastName: finalUser.lastName,
+          email: finalUser.email,
+          token,
+        },
+      })
     })
     .catch(e => {
       console.log('Something went wrong:', e);
