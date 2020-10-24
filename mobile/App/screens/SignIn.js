@@ -3,7 +3,7 @@ import { ScrollView, View, StyleSheet, Text, TouchableOpacity, Platform } from "
 
 import { TextField, ErrorText } from "../components/Form";
 import { Button } from "../components/Button";
-import { reviewApi, saveAuthToken } from "../util/api";
+import { reviewApi, saveAuthToken, saveAccessToken } from "../util/api";
 import * as Google from 'expo-google-app-auth';
 
 const styles = StyleSheet.create({
@@ -40,29 +40,28 @@ export default class SignIn extends React.Component {
   signInWithGoogle = async () => {
     Google.logInAsync(googleAuthConfig)
       .then(async result => {
+        // Get the email, save it to the database
+        reviewApi("/google", {
+          method: "POST",
+          body: JSON.stringify({
+            firstName: result.user.givenName,
+            lastName: result.user.familyName,
+            email: result.user.email
+          })
+        })
+        .then(response => {
+          console.log(response);
+          return saveAuthToken(response.result.token);
+        })
+        .catch(e => {
+          this.setState({ error: e.message });
+        });
         // console.log('Result', result);
         if (result.type === 'success') {
-          // Get the email, save it to the database
-          this.setState({ email: result.user.email });
-          reviewApi("/google-sign-in", {
-            method: "POST",
-            body: JSON.stringify({
-              firstName: result.user.givenName,
-              lastName: result.user.familyName,
-              email: this.state.email,
-            }),
-          })
-          .then(response => {
-            return saveAuthToken(response.result.token);
-          })
-          .then(() => {
-            // Success!
-            console.log("Successful login!");
-            this.props.navigation.navigate("Information");
-          })
-          .catch(e => {
-            this.setState({ error: e.message });
-          });
+          // this.setState({ email: result.user.email });
+          saveAccessToken(result.accessToken);
+          console.log("Successful login!");
+          this.props.navigation.navigate("Information");
         } else {
           console.log(`Google.logInAsync: login was unsuccessful`);
         }

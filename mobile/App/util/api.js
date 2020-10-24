@@ -3,24 +3,36 @@ import { navigate } from "./NavigationService";
 
 const BASE_URL = "http://192.168.0.27:3000";
 const AUTH_TOKEN = 'ReviewApp::AUTH_TOKEN';
+const ACCESS_TOKEN = 'ReviewApp::ACCESS_TOKEN';
 
 export const saveAuthToken = (token) => {
   if (!token) {
     return AsyncStorage.removeItem(AUTH_TOKEN);
   }
-
+  console.log(token)
   return AsyncStorage.setItem(AUTH_TOKEN, token);
 };
 
 export const hasAuthToken = () => {
   return AsyncStorage.getItem(AUTH_TOKEN).then(token => {
-    console.log("token", token);
     if (token) {
+      console.log(token);
       return true;
     }
 
     return false;
   })
+};
+
+// Signin/SignOut Google
+export const saveAccessToken = accessToken => {
+  if (!accessToken) return AsyncStorage.removeItem(ACCESS_TOKEN);
+
+  return AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
+};
+
+export const removeAccessToken = accessToken => {
+  return AsyncStorage.removeItem(ACCESS_TOKEN, accessToken)
 }
 
 export const reviewApi = (path, options = {}) => {
