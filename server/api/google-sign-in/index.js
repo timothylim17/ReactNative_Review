@@ -12,10 +12,6 @@ app.post("*", (req, res) => {
       console.log('Google account created:', req.body);
       return Google.create(req.body);
     })
-    .then(() => {
-      // find the email on the db
-      return Google.findOne({ email: req.body.email });
-    })
     .then(user => {
       console.log('Then:', user);
       finalUser = user;

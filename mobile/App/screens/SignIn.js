@@ -35,31 +35,40 @@ export default class SignIn extends React.Component {
     email: "",
     password: "",
     error: "",
+    fName: "",
+    lName: ""
   };
 
   signInWithGoogle = async () => {
     Google.logInAsync(googleAuthConfig)
       .then(async result => {
         // Get the email, save it to the database
-        reviewApi("/google", {
+        this.setState({
+          email: result.user.email,
+          fName: result.user.givenName,
+          lName: result.user.familyName
+        });
+        // Save token to log out
+        saveAccessToken(result.accessToken);
+
+        // Call to api authentication
+        reviewApi("/google-sign-in", {
           method: "POST",
           body: JSON.stringify({
             firstName: result.user.givenName,
             lastName: result.user.familyName,
-            email: result.user.email
-          })
+            email: this.state.email,
+          }),
         })
         .then(response => {
-          console.log(response);
+          console.log('Get token:', response);
           return saveAuthToken(response.result.token);
         })
         .catch(e => {
           this.setState({ error: e.message });
         });
-        // console.log('Result', result);
         if (result.type === 'success') {
-          // this.setState({ email: result.user.email });
-          saveAccessToken(result.accessToken);
+          // User successfully logged in!
           console.log("Successful login!");
           this.props.navigation.navigate("Information");
         } else {
