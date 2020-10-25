@@ -1,9 +1,8 @@
 import { AsyncStorage } from "react-native";
 import { navigate } from "./NavigationService";
 
-const BASE_URL = "http://192.168.1.67:3000";
+const BASE_URL = "http://192.168.0.27:3000";
 const AUTH_TOKEN = 'ReviewApp::AUTH_TOKEN';
-const ACCESS_TOKEN = 'ReviewApp::ACCESS_TOKEN';
 
 export const saveAuthToken = (token) => {
   if (!token) {
@@ -23,17 +22,6 @@ export const hasAuthToken = () => {
     return false;
   })
 };
-
-// Signin/SignOut Google
-export const saveAccessToken = accessToken => {
-  if (!accessToken) return AsyncStorage.removeItem(ACCESS_TOKEN);
-
-  return AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
-};
-
-export const removeAccessToken = accessToken => {
-  return AsyncStorage.removeItem(ACCESS_TOKEN, accessToken)
-}
 
 export const reviewApi = (path, options = {}) => {
   return AsyncStorage.getItem(AUTH_TOKEN)

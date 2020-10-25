@@ -3,8 +3,17 @@ import { ScrollView, View, StyleSheet, Text, TouchableOpacity, Platform } from "
 
 import { TextField, ErrorText } from "../components/Form";
 import { Button } from "../components/Button";
-import { reviewApi, saveAuthToken, saveAccessToken } from "../util/api";
+import { reviewApi, saveAuthToken } from "../util/api";
 import * as Google from 'expo-google-app-auth';
+
+const isAndroid = () => Platform.OS === 'android',
+  androidID = '308218911119-459l4op4o0l10014s3lkn00tibci2r65.apps.googleusercontent.com',
+  iosID = '308218911119-q20q6rt2lcllrvs3rt9ooq0v1ok024qj.apps.googleusercontent.com';
+
+const googleAuthConfig = {
+  clientId: isAndroid() ? androidID : iosID,
+  scopes: ['profile', 'email'],
+}
 
 const styles = StyleSheet.create({
   textBlock: {
@@ -21,37 +30,23 @@ const styles = StyleSheet.create({
   }
 });
 
-const isAndroid = () => Platform.OS === 'android',
-  androidID = '308218911119-459l4op4o0l10014s3lkn00tibci2r65.apps.googleusercontent.com',
-  iosID = '308218911119-q20q6rt2lcllrvs3rt9ooq0v1ok024qj.apps.googleusercontent.com';
-
-const googleAuthConfig = {
-  clientId: isAndroid() ? androidID : iosID,
-  scopes: ['profile', 'email'],
-}
-
 export default class SignIn extends React.Component {
   state = {
     email: "",
     password: "",
     error: "",
-    fName: "",
-    lName: ""
   };
 
+  /**
+   * Google Sign-in
+   * @param {Object} result Returns user's Google Information upon sign-in.
+   */
   signInWithGoogle = async () => {
+    // Loads Google auth page
     Google.logInAsync(googleAuthConfig)
       .then(async result => {
+        this.setState({ email: result.user.email });
         // Get the email, save it to the database
-        this.setState({
-          email: result.user.email,
-          fName: result.user.givenName,
-          lName: result.user.familyName
-        });
-        // Save token to log out
-        saveAccessToken(result.accessToken);
-
-        // Call to api authentication
         reviewApi("/google-sign-in", {
           method: "POST",
           body: JSON.stringify({
@@ -61,14 +56,13 @@ export default class SignIn extends React.Component {
           }),
         })
         .then(response => {
-          console.log('Get token:', response);
           return saveAuthToken(response.result.token);
         })
         .catch(e => {
           this.setState({ error: e.message });
         });
+        // If successfull login
         if (result.type === 'success') {
-          // User successfully logged in!
           console.log("Successful login!");
           this.props.navigation.navigate("Information");
         } else {
@@ -80,6 +74,9 @@ export default class SignIn extends React.Component {
       })
   };
 
+  /**
+   * Regular Sign in
+   */
   handleSubmit = () => {
     this.setState({ error: "" });
     reviewApi("/sign-in", {
