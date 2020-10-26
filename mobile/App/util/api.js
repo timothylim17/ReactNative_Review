@@ -8,20 +8,20 @@ export const saveAuthToken = (token) => {
   if (!token) {
     return AsyncStorage.removeItem(AUTH_TOKEN);
   }
-
+  console.log(token)
   return AsyncStorage.setItem(AUTH_TOKEN, token);
 };
 
 export const hasAuthToken = () => {
   return AsyncStorage.getItem(AUTH_TOKEN).then(token => {
-    console.log("token", token);
     if (token) {
+      console.log(token);
       return true;
     }
 
     return false;
   })
-}
+};
 
 export const reviewApi = (path, options = {}) => {
   return AsyncStorage.getItem(AUTH_TOKEN)

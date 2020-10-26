@@ -4,9 +4,7 @@ mongoose.Promise = global.Promise;
 let isConnected;
 
 // Note: This should be stored in environment variables
-const DB_URL =
-  "mongodb+srv://timothylim17:DSd7YWUp920HWxVa@cluster0.k7kim.mongodb.net/reviewDB";
-
+const DB_URL = "mongodb+srv://timothylim17:DSd7YWUp920HWxVa@cluster0.k7kim.mongodb.net/reviewDB";
 const connectToDatabase = () => {
   if (isConnected) {
     console.log("=> using existing database connection");
